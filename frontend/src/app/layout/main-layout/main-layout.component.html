@@ -1,0 +1,54 @@
+<div class="po-wrapper">
+  <!-- p-actions-icon="an an-warning-circle" -->
+  <po-toolbar
+    p-title="Aplicação Base Conceitho"
+    [p-actions-icon]="PalleteTemplate"
+    [p-actions]="actions"
+    p-shadow="true"
+  >
+  </po-toolbar>
+
+  <ng-template #PalleteTemplate>
+    <div class="toolbar-container">
+      <span *ngIf="user">{{ user.email || user.login }}</span>
+      <po-avatar
+        class="profile-picture"
+        *ngIf="user"
+        p-loading="lazy"
+        [title]="user.login || user.name"
+        p-src="{{user.avatar}}"
+      >
+      </po-avatar>
+      <po-button
+        p-label="Sair"
+        p-kind="tertiary"
+        [p-danger]="true"
+        class="po-sm-auto"
+        p-icon="an an-sign-out"
+        p-click="logout($event)"
+      ></po-button>
+    </div>
+  </ng-template>
+
+  <po-menu
+    [p-collapsed]="true"
+    [p-filter]="true"
+    p-short-logo="assets/images/short-logo-conceitho-black.png"
+    p-logo="assets/images/logo-conceitho-black.png"
+    [p-menus]="menus"
+  >
+    <div *p-menu-header-template>
+      <po-select
+        [ngModel]="firstBranch"
+        [p-options]="branchesOptions"
+        (p-change)="onChangeBranch($event)"
+        p-icon="po-icon po-icon-company"
+        [p-disabled]="isMainScreen()"
+      >
+      </po-select>
+    </div>
+    <button po-button p-label="Logout" (click)="logout()"></button>
+  </po-menu>
+
+  <router-outlet />
+</div>
