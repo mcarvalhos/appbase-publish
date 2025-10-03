@@ -1,0 +1,27 @@
+import { Body, Controller, HttpException, Post } from '@nestjs/common';
+import type { User } from '@appbase/core';
+import { UserRepository } from './user.repository';
+import RegisterUser from '@appbase/core/src/user/service/registerUser';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly repo: UserRepository) {}
+
+  @Post('login')
+  async login() {
+    return 'login';
+  }
+
+  @Post('register')
+  async register(@Body() user: User) {
+    const userCase = new RegisterUser();
+    await userCase.execute(user);
+
+    const userExisting = await this.repo.findByEmail(user.email);
+    if (userExisting) {
+      throw new HttpException('Usuário já existe', 400);
+    }
+    await this.repo.save({ ...user, role: 'user' }); // salva automaticamente como usuário e não admin
+    return { message: 'Usuário registrado com sucesso' };
+  }
+}
